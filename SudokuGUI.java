@@ -20,7 +20,6 @@ public class SudokuGUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Game board
         JPanel boardPanel = new JPanel(new GridLayout(9, 9));
         boardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         for (int i = 0; i < 9; i++) {
