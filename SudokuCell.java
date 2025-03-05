@@ -72,7 +72,6 @@ public class SudokuCell extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // Draw selection background
         if (isSelected) {
             g2.setColor(new Color(255, 200, 200));
             g2.fillRect(0, 0, getWidth(), getHeight());
@@ -94,7 +93,7 @@ public class SudokuCell extends JPanel {
             int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
             g2.drawString(text, x, y);
         } else if (showCandidates) {
-            g2.setColor(Color.LIGHT_GRAY);
+            g2.setColor(Color.GRAY);
             g2.setFont(new Font("Arial", Font.PLAIN, 10));
             for (int i = 0; i < 9; i++) {
                 if (candidates[i]) {

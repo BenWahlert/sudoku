@@ -22,21 +22,25 @@ public class SudokuGUI extends JFrame {
 
         JPanel boardPanel = new JPanel(new GridLayout(9, 9));
         boardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 cells[i][j] = new SudokuCell();
                 applyCellBorders(i, j);
                 int finalI = i, finalJ = j;
+
                 cells[i][j].addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent evt) {
                         selectCell(finalI, finalJ);
                     }
                 });
+
                 cells[i][j].addKeyListener(new KeyAdapter() {
                     public void keyTyped(KeyEvent e) {
                         handleCellInput(finalI, finalJ, e.getKeyChar());
                     }
                 });
+
                 boardPanel.add(cells[i][j]);
             }
         }
@@ -91,16 +95,21 @@ public class SudokuGUI extends JFrame {
     }
 
     private void handleCellInput(int row, int col, char input) {
-        if (!Character.isDigit(input) || input == '0') return;
-        int num = Character.getNumericValue(input);
         SudokuCell cell = cells[row][col];
+        if (!cell.isEditable()) return;
 
-        if (cell.isEditable()) {
+        if (input == '\b' || input == '\u007F') {
+            cell.setValue(0);
+            board.setCell(row, col, 0);
+            cell.setIncorrect(false);
+        } else if (Character.isDigit(input) && input != '0') {
+            int num = Character.getNumericValue(input);
             cell.setValue(num);
             board.setCell(row, col, num);
             cell.setIncorrect(false);
-            if (candidateModeCheckbox.isSelected()) updateCandidates();
         }
+
+        if (candidateModeCheckbox.isSelected()) updateCandidates();
     }
 
     private void checkSolution() {
@@ -113,7 +122,6 @@ public class SudokuGUI extends JFrame {
                     if (correct) {
                         cell.setCorrect(true);
                         cell.setEditable(false);
-                        cell.setIncorrect(false);
                     } else {
                         cell.setIncorrect(true);
                         allCorrect = false;
@@ -127,7 +135,10 @@ public class SudokuGUI extends JFrame {
     }
 
     private void newGame(int difficulty) {
-        board.generateNewPuzzle(difficulty);
+        do {
+            board.generateNewPuzzle(difficulty);
+        } while (!board.isValidPuzzle());
+
         selectedRow = -1;
         selectedCol = -1;
 
@@ -170,8 +181,10 @@ public class SudokuGUI extends JFrame {
         }
     }
 
-
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new SudokuGUI().setVisible(true));
+        EventQueue.invokeLater(() -> {
+            SudokuGUI gui = new SudokuGUI();
+            gui.setVisible(true);
+        });
     }
 }
