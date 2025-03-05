@@ -14,8 +14,8 @@ public class SudokuBoard {
     public void generateNewPuzzle(int difficultyLevel) {
         int clues = switch (difficultyLevel) {
             case 0 -> 36;
-            case 1 -> 20;
-            case 2 -> 18;
+            case 1 -> 22;
+            case 2 -> 21;
             default -> 36;
         };
 
